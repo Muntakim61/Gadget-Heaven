@@ -1,13 +1,10 @@
 # Gadget Heaven
 
-Welcome to Gadget Heaven, an e-commerce platform showcasing a curated selection of tech gadgets. This project demonstrates core React concepts, data handling, and state management. Explore the live website and delve into the requirements through the links below.
+Welcome to Gadget Heaven, an e-commerce platform showcasing a curated selection of tech gadgets.
 
 ## Project Links
 
 1. **Netlify Live Website**: [Gadget Heaven on Netlify](https://gadget-heaven-8-assignment.netlify.app/) 
-1. **Surge Live Website**: [Gadget Heaven on Surge](https://heaven-assignment-8.surge.sh/)
-2. **Project Repository**: [GitHub Repository](https://github.com/programming-hero-web-course2/b10a8-gadget-heaven-Muntakim61/tree/main)
-3. **Requirement Document**: [Requirements and Documentation](https://github.com/programming-hero-web-course2/b10a8-gadget-heaven-Muntakim61/tree/main)
 
 ## React Fundamentals Used
 
