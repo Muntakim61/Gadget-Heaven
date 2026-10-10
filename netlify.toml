@@ -17,11 +17,15 @@
   node_bundler = "esbuild"
 
 # Friendlier path for the chat function. Must come before the SPA
-# catch-all below, since redirects are matched in order.
+# catch-all below, since redirects are matched in order. `force = true`
+# is required - without it Netlify only reliably applies this rewrite to
+# GET-like requests, and POST (what the chat widget actually sends) fell
+# straight through to a platform 404 instead of reaching the function.
 [[redirects]]
   from = "/api/chat"
   to = "/.netlify/functions/chat"
   status = 200
+  force = true
 
 # SPA fallback: every path is served index.html so client-side routes
 # (/cart, /Card/7, ...) resolve on a hard refresh or a shared link.
