@@ -14,6 +14,7 @@ An e-commerce front end for browsing tech gadgets, built with React, Vite and Ta
 - Cart with quantity controls, plus a wishlist, both saved locally between visits
 - Recently viewed and related products
 - Price/rating chart on the statistics page
+- AI shopping assistant chatbot, with a gift-finder quiz (Netlify only, needs the backend function)
 
 ![Catalog and filters](screenshots/catalog-light.jpg)
 
@@ -21,9 +22,11 @@ An e-commerce front end for browsing tech gadgets, built with React, Vite and Ta
 
 ![Command palette](screenshots/command-palette.jpg)
 
+![Chatbot](screenshots/chatbot.jpg)
+
 ## Built with
 
-React 18 · React Router · Tailwind CSS · Motion · Recharts · Phosphor Icons · localforage
+React 18 · React Router · Tailwind CSS · Motion · Recharts · Phosphor Icons · localforage · Google Gemini
 
 ## Running it
 
