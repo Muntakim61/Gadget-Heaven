@@ -1,114 +1,121 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { CartContext } from "../Context/Context";
 import Cart from "../Cart/Cart";
-import { useNavigate } from "react-router-dom";
-import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { ArrowsDownUp, CheckCircle, ShoppingCart } from "@phosphor-icons/react";
+import EmptyState from "../ui/EmptyState";
 import "react-toastify/dist/ReactToastify.css";
-import { Helmet} from "react-helmet-async";
 
 const Carts = () => {
-  const { cartItems, emptyCart } = useContext(CartContext);
-  const [sortedItems, setSortedItems] = useState([]);
-  const [Cost, setCost] = useState(0);
+  const { cartItems, cartTotal, cartCount, emptyCart } = useContext(CartContext);
+  const [sortDesc, setSortDesc] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [paidTotal, setPaidTotal] = useState(0);
   const navigate = useNavigate();
+  const modalRef = useRef(null);
+
+  // Drive the native dialog so focus trapping and Esc come from the platform
+  // instead of being faked with aria-modal on a plain div.
+  useEffect(() => {
+    const dialog = modalRef.current;
+    if (!dialog) return;
+    if (isModalOpen && !dialog.open) dialog.showModal();
+    if (!isModalOpen && dialog.open) dialog.close();
+  }, [isModalOpen]);
+
+  // Sort on the line total, since a cheap item bought ten times can outweigh
+  // a single expensive one.
+  const visibleItems = useMemo(() => {
+    if (!sortDesc) return cartItems;
+    return [...cartItems].sort((a, b) => b.price * b.qty - a.price * a.qty);
+  }, [cartItems, sortDesc]);
 
   const handlePurchase = () => {
+    setPaidTotal(cartTotal);
     setIsModalOpen(true);
   };
 
+  // Fired by the dialog's close event, so Esc and the button both settle the
+  // purchase the same way.
   const closeModal = () => {
     setIsModalOpen(false);
     emptyCart();
-    setCost(0);
-    // toast.success("Purchase completed successfully!");
     navigate("/");
   };
 
-  const calculateTotalCost = () => {
-    return cartItems.reduce((total, item) => total + item.price, 0);
-  };
-
-  const handleSortByPrice = () => {
-    const sorted = [...sortedItems].sort((a, b) => b.price - a.price);
-    setSortedItems(sorted);
-    setIsSorted(true);
-  };
-
-  useEffect(() => {
-    setCost(calculateTotalCost());
-    setSortedItems(cartItems);
-  }, [cartItems]);
-
-  
-
-
   return (
-    <div className="mt-12 w-10/12 mx-auto">
+    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
       <Helmet>
         <title>Cart</title>
-        <meta name="description" content="Learn more about us on this page" />
+        <meta name="description" content="Review the gadgets in your cart" />
       </Helmet>
-      <div className="flex justify-between">
-        <p className="font-bold">Cart</p>
-        <div className="flex justify-end items-center gap-4">
-          <p className="font-bold mr-5"> Total cost: $ {Cost}</p>
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center justify-between sm:justify-start sm:gap-4">
+          <p className="text-lg font-semibold text-content">
+            Cart{cartCount > 0 && <span className="text-muted"> ({cartCount})</span>}
+          </p>
+          <p className="font-mono text-sm text-muted">Total: ${cartTotal}</p>
+        </div>
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
-            onClick={handleSortByPrice}
-            className="btn flex rounded-full bg-white border-2 border-[#9538E2] text-[#9538E2] px-4 font-semibold max-w-[170px]"
+            onClick={() => setSortDesc((v) => !v)}
+            aria-pressed={sortDesc}
+            disabled={cartItems.length === 0}
+            className="flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-strong px-3 py-2 text-sm font-medium text-content transition-colors hover:border-accent hover:text-accent disabled:opacity-40 sm:flex-none sm:px-4"
           >
             Sort by Price
-            <img
-              src="https://i.ibb.co.com/Wn5xGTV/sort-icon.jpg"
-              alt=""
-              className="ml-3 w-5 rounded-btn"
-            />
+            <ArrowsDownUp size={16} />
           </button>
           <button
             onClick={handlePurchase}
-            className="btn font-medium rounded-full bg-[#9538E2] text-white px-4 max-w-[150px]"
-            disabled={Cost === 0}
+            className="flex-1 whitespace-nowrap rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-fg transition-colors hover:bg-accent-hover disabled:opacity-40 sm:flex-none"
+            disabled={cartTotal === 0}
           >
             Purchase
           </button>
         </div>
       </div>
 
-      <div className="mt-6">
-        {sortedItems.length > 0 ? (
-          sortedItems.map((item, index) => (
-            <Cart key={index} product={item}></Cart>
-          ))
+      <div className="mt-8">
+        {visibleItems.length > 0 ? (
+          visibleItems.map((item) => <Cart key={item.product_id} product={item} />)
         ) : (
-          <p className="text-center text-5xl shadow-2xl my-7 p-6 bg-white rounded-lg">
-            Oops! <br /> Your cart is empty
-          </p>
+          <EmptyState
+            icon={ShoppingCart}
+            title="Your cart is empty"
+            description="Browse the catalog and add something you like."
+            action={
+              <Link to="/">
+                <button className="mt-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-fg transition-colors hover:bg-accent-hover">
+                  Start shopping
+                </button>
+              </Link>
+            }
+          />
         )}
       </div>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-4/12 mx-auto h-[350px] max-w-[400px] flex flex-col justify-around items-center">
-            <img
-              src="https://i.ibb.co.com/YbvYmTJ/Group.png"
-              alt=""
-              className="w-16"
-            />
-            <p className="text-xl font-bold text-center mb-4">
-              Payment Successful!
-            </p>
-            <p className="text-center mb-6">Thanks for purchasing.</p>
-            <p>Total : $ {Cost}</p>
-            <button
-              onClick={closeModal}
-              className="btn px-4 py-2 rounded-lg w-full"
-            >
-              Close
-            </button>
-          </div>
+      <dialog
+        ref={modalRef}
+        onClose={closeModal}
+        aria-label="Payment successful"
+        className="w-[min(24rem,calc(100vw-2rem))] rounded-2xl border border-subtle bg-surface p-8 text-content backdrop:bg-black/70"
+      >
+        <div className="flex flex-col items-center gap-4 text-center">
+          <CheckCircle size={48} className="text-success" weight="fill" />
+          <p className="text-xl font-semibold text-content">Payment successful</p>
+          <p className="text-sm text-muted">Thanks for purchasing.</p>
+          <p className="font-mono text-sm text-muted">Total: ${paidTotal}</p>
+          <button
+            onClick={() => setIsModalOpen(false)}
+            className="w-full rounded-full bg-accent py-2.5 text-sm font-semibold text-accent-fg transition-colors hover:bg-accent-hover"
+          >
+            Close
+          </button>
         </div>
-      )}
-
+      </dialog>
     </div>
   );
 };

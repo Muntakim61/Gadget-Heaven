@@ -1,110 +1,64 @@
-import { StrictMode } from "react";
+import { StrictMode, lazy } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import Root from "./components/Root/Root";
 import Errorpage from "./components/Errorpage/Errorpage";
 import Home from "./components/Home/Home";
-import Dashboard from "./components/Dashboard/Dashboard";
-import Header from "./components/Header/Header";
-import CardDetail from "./components/CardDetail/CardDetail";
-import Authors_Hub from "./components/Authors-Hub/Authors_Hub";
-import Stat from "./components/Stat/Stat";
 import { CartProvider } from "./components/Context/Context";
-import DashboardBanner from "./components/DashboardBanner/DashboardBanner";
 import { WishProvider } from "./components/WishContext/WishContext";
-import { ToastContainer} from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { HelmetProvider } from "react-helmet-async";
+import { ThemeProvider } from "./components/Theme/ThemeProvider";
+import { getProducts } from "./lib/products";
+
+// Home stays eager because it is the landing route and owns the LCP.
+// Everything else is split out; /stat matters most since it pulls in Recharts.
+const CardDetail = lazy(() => import("./components/CardDetail/CardDetail"));
+const Dashboard = lazy(() => import("./components/Dashboard/Dashboard"));
+const DashboardBanner = lazy(() =>
+  import("./components/DashboardBanner/DashboardBanner")
+);
+const Authors_Hub = lazy(() => import("./components/Authors-Hub/Authors_Hub"));
+const Stat = lazy(() => import("./components/Stat/Stat"));
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root></Root>,
-    errorElement: <Errorpage></Errorpage>,
+    element: <Root />,
+    errorElement: <Errorpage />,
     children: [
-      {
-        path: "/",
-        element: (
-          <>
-            <Header></Header>,<Home></Home>
-          </>
-        ),
-        errorElement: <Errorpage></Errorpage>,
-      },
+      { index: true, element: <Home /> },
       {
         path: "Card/:product_id",
-        element: (
-          <>
-            <Header></Header>,<CardDetail></CardDetail>
-          </>
-        ),
-        errorElement: <Errorpage></Errorpage>,
-        loader: () => fetch("/cardData.json"),
+        element: <CardDetail />,
+        loader: () => getProducts(),
+        errorElement: <Errorpage />,
       },
-      {
-        path: "dashboard",
-        element: (
-          <>
-            <Header></Header>
-            <Dashboard></Dashboard>
-          </>
-        ),
-        errorElement: <Errorpage></Errorpage>,
-      },
-      {
-        path: "authors-hub",
-        element: (
-          <>
-            <Header></Header>
-            <Authors_Hub></Authors_Hub>
-          </>
-        ),
-        errorElement: <Errorpage></Errorpage>,
-      },
-      {
-        path: "/stat",
-        element: (
-          <>
-            <Header></Header>
-            <Stat></Stat>
-          </>
-        ),
-        errorElement: <Errorpage></Errorpage>,
-      },
-      {
-        path: "/wishlist",
-        element: (
-          <>
-            <Header></Header>
-            <DashboardBanner></DashboardBanner>
-          </>
-        ),
-        errorElement: <Errorpage></Errorpage>,
-      },
-      {
-        path: "/cart",
-        element: (
-          <>
-            <Header></Header>
-            <DashboardBanner></DashboardBanner>
-          </>
-        ),
-        errorElement: <Errorpage></Errorpage>,
-      },
+      { path: "dashboard", element: <Dashboard />, errorElement: <Errorpage /> },
+      { path: "authors-hub", element: <Authors_Hub />, errorElement: <Errorpage /> },
+      { path: "stat", element: <Stat />, errorElement: <Errorpage /> },
+      { path: "wishlist", element: <DashboardBanner />, errorElement: <Errorpage /> },
+      { path: "cart", element: <DashboardBanner />, errorElement: <Errorpage /> },
+      // Catch-all so an unknown URL still renders inside the layout, with the
+      // header, nav and footer available instead of a bare dead-end page.
+      { path: "*", element: <Errorpage notFound /> },
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <HelmetProvider>
-      <CartProvider>
-        <WishProvider>
-          <RouterProvider router={router} />
-          <ToastContainer position="top-left" autoClose={3000} />
-        </WishProvider>
-      </CartProvider>
-    </HelmetProvider>
+    <ThemeProvider>
+      <HelmetProvider>
+        <CartProvider>
+          <WishProvider>
+            <RouterProvider router={router} />
+            <ToastContainer position="bottom-right" autoClose={3000} theme="colored" />
+          </WishProvider>
+        </CartProvider>
+      </HelmetProvider>
+    </ThemeProvider>
   </StrictMode>
 );

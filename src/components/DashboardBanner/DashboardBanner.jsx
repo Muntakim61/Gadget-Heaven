@@ -1,57 +1,44 @@
-import { useContext, useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import Carts from "../Carts/Carts";
 import Wishlists from "../Wishlists/Wishlists";
 import { useLocation } from "react-router-dom";
 
 const DashboardBanner = () => {
-
-  const ClickedClass = "text-[#9538E2] bg-white font-extrabold";
-  const NotClickedClass = "border-white border-2 text-white bg-[#9538E2]";
-  
-  const [Active, setActive] = useState("");
+  // Default to the cart so /dashboard is never an empty dead end.
+  const [active, setActive] = useState("cart");
   const location = useLocation();
-  console.log(location)
-  const handleWish= () =>{
-    setActive("wishlist")
-  }
 
   useEffect(() => {
-    if (location.pathname === "/wishlist") {
-      setActive("wishlist");
-    }
-    else if (location.pathname === "/cart"){
-      setActive("cart");
-    }
+    if (location.pathname === "/wishlist") setActive("wishlist");
+    else if (location.pathname === "/cart") setActive("cart");
   }, [location.pathname]);
-
-
-
-
-
 
   return (
     <div>
-        {/* dashboard banner starts */}
-      <div className="bg-[#9538E2]">
-        <p className="font-bold text-3xl text-center text-white pt-8">
+      <div className="border-b border-subtle bg-canvas py-16 text-center">
+        <p className="text-3xl font-semibold tracking-tight text-content">
           Dashboard
         </p>
-        <p className="text-white w-1/3 text-center mx-auto mt-4">
-          Explore the latest gadgets that will take your experience to the next
-          level. From smart devices to the coolest accessories, we have it all!
+        <p className="mx-auto mt-4 max-w-md text-sm text-faint">
+          Explore the latest gadgets that will take your experience to the
+          next level.
         </p>
-        <div className=" flex justify-center gap-6 py-8">
+        <div className="mt-8 flex justify-center gap-3">
           <button
-            className={`px-5 py-1 rounded-full max-w-[100px] ${
-              Active === "cart" ? ClickedClass : NotClickedClass
+            className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${
+              active === "cart"
+                ? "bg-accent-500 text-accent-fg"
+                : "bg-surface text-muted hover:bg-surface-2 hover:text-content"
             }`}
             onClick={() => setActive("cart")}
           >
             Cart
           </button>
           <button
-            className={`px-4 py-1 rounded-full max-w-[120px] ${
-              Active === "wishlist" ? ClickedClass : NotClickedClass
+            className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${
+              active === "wishlist"
+                ? "bg-accent-500 text-accent-fg"
+                : "bg-surface text-muted hover:bg-surface-2 hover:text-content"
             }`}
             onClick={() => setActive("wishlist")}
           >
@@ -59,23 +46,9 @@ const DashboardBanner = () => {
           </button>
         </div>
       </div>
-      {/* dashboard banner ends */}
-      {/* cart/wishlist starts */}
-      {/* <div>
-        {
-            Active === "cart" ? <Carts></Carts> : <Wishlists></Wishlists>
-        }
-      </div> */}
 
-     
-      {
-        Active ==="" ? 
-          (<p></p>)
-          :
-            (Active === "cart" ? <Carts></Carts> : <Wishlists></Wishlists>)
-          
-      }
-      
+      {active === "cart" && <Carts />}
+      {active === "wishlist" && <Wishlists />}
     </div>
   );
 };

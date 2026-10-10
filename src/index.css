@@ -1,3 +1,96 @@
+@import "@fontsource/geist-sans/400.css";
+@import "@fontsource/geist-sans/500.css";
+@import "@fontsource/geist-sans/600.css";
+@import "@fontsource/geist-sans/700.css";
+@import "@fontsource/geist-mono/400.css";
+@import "@fontsource/geist-mono/500.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Space-separated RGB channels so Tailwind's <alpha-value> modifier works. */
+:root {
+  --c-canvas: 250 250 250;
+  --c-surface: 255 255 255;
+  --c-surface-2: 244 244 245;
+  --c-photo: 244 244 245;
+  --c-text: 24 24 27;
+  --c-muted: 82 82 91;
+  --c-faint: 113 113 122;
+  --c-border: 228 228 231;
+  --c-border-strong: 212 212 216;
+  --c-accent: 58 99 209;
+  --c-accent-hover: 46 80 172;
+  --c-accent-soft: 232 238 254;
+  --c-accent-fg: 255 255 255;
+  --c-success: 4 120 87;
+  --c-danger: 185 28 28;
+  --c-warn: 180 83 9;
+  --c-ring: 58 99 209;
+}
+
+[data-theme="dark"] {
+  --c-canvas: 9 9 11;
+  --c-surface: 24 24 27;
+  --c-surface-2: 39 39 42;
+  --c-photo: 237 237 240;
+  --c-text: 244 244 245;
+  --c-muted: 161 161 170;
+  --c-faint: 113 113 122;
+  --c-border: 39 39 42;
+  --c-border-strong: 63 63 70;
+  --c-accent: 76 126 242;
+  --c-accent-hover: 110 168 254;
+  --c-accent-soft: 30 41 86;
+  --c-accent-fg: 255 255 255;
+  --c-success: 52 211 153;
+  --c-danger: 248 113 113;
+  --c-warn: 251 191 36;
+  --c-ring: 110 168 254;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-canvas text-content;
+}
+
+/* Theme swap should feel like a dissolve, not a flash. Scoped to color only
+   so it never animates layout, and skipped while the user is toggling fast. */
+body,
+body * {
+  transition-property: background-color, border-color;
+  transition-duration: 180ms;
+  transition-timing-function: ease;
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--c-ring));
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

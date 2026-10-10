@@ -1,12 +1,15 @@
-
 const AuthorsBar = () => {
-    return (
-        
-        <div className="h-[350px] bg-[#9538E2] text-white flex flex-col items-center justify-center py-8 mb-12">
-            <h2 className="font-bold text-2xl">Author's Hub</h2>
-            <p className="w-1/3 text-center mt-4">Explore the latest gadgets that will take your experience to the next level. From smart devices to the coolest accessories, we have it all!</p>
-        </div>
-    );
+  return (
+    <div className="border-b border-subtle bg-canvas py-20 text-center">
+      <h2 className="text-3xl font-semibold tracking-tight text-content">
+        Author's Hub
+      </h2>
+      <p className="mx-auto mt-4 max-w-md text-sm text-faint">
+        Explore the latest gadgets that will take your experience to the next
+        level.
+      </p>
+    </div>
+  );
 };
 
 export default AuthorsBar;

@@ -1,34 +1,35 @@
 # Gadget Heaven
 
-Welcome to Gadget Heaven, an e-commerce platform showcasing a curated selection of tech gadgets.
+An e-commerce front end for browsing tech gadgets, built with React, Vite and Tailwind.
 
-## Project Links
+**Live:** [gadget-heaven-redesign.surge.sh](https://gadget-heaven-redesign.surge.sh)
 
-1. **Netlify Live Website**: [Gadget Heaven on Netlify](https://gadget-heaven-8-assignment.netlify.app/) 
+![Home page](screenshots/home-dark.jpg)
 
-## React Fundamentals Used
+## Features
 
-The project demonstrates various essential React concepts, including:
+- Light and dark themes that follow your system setting, with a toggle that persists
+- Catalog with search, category, price and sort filters, all synced to the URL so views are shareable
+- Command palette (`Ctrl`/`Cmd` + `K`) with fuzzy search
+- Cart with quantity controls, plus a wishlist, both saved locally between visits
+- Recently viewed and related products
+- Price/rating chart on the statistics page
 
-1. **JSX** - Utilizing JavaScript XML syntax for structuring components.
-2. **Components** - Modular structure achieved through reusable components.
-3. **State Management** - Use of React's `useState` to manage local component state.
-4. **React Router** - Navigation and routing among different pages.
-5. **Props** - Passing data between parent and child components effectively.
+![Catalog and filters](screenshots/catalog-light.jpg)
 
-## Data Handling and Management
+![Product detail](screenshots/product-detail.jpg)
 
-For managing data, the project uses the following tools:
+![Command palette](screenshots/command-palette.jpg)
 
-1. **Context API** - For handling global state across the application, especially for cart and wishlist functionality.
-2. **Local Storage** - Preserving user-specific data like cart and wishlist items for better UX upon re-visits.
+## Built with
 
-## Key Features
+React 18 · React Router · Tailwind CSS · Motion · Recharts · Phosphor Icons · localforage
 
-1. **Product Display and Categorization** - A clear display of products by categories, allowing users to browse items efficiently.
-2. **Add to Cart and Wishlist** - Smooth addition of products to the cart and wishlist, with real-time updates.
-3. **Search and Filter Options** - Search and filter capabilities for an enhanced shopping experience.
-4. **Product Details Page** - Individual pages for each product, showcasing detailed descriptions and specifications.
-5. **Dynamic Chart Visualization** - A statistics page that visualizes product price against rating using a Composed Chart.
+## Running it
 
-Explore the repository and codebase for more insights into how React fundamentals and data management techniques were applied in this project. Thank you for visiting Gadget Heaven!
+```bash
+npm install
+npm run dev
+```
+
+`npm run build` produces the production bundle in `dist/`.

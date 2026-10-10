@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# SPA fallback: every path is served index.html so client-side routes
+# (/cart, /Card/7, ...) resolve on a hard refresh or a shared link.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

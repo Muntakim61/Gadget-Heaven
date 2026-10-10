@@ -1,33 +1,49 @@
-import { useLoaderData, useParams } from "react-router-dom";
-import "./ProductBanner.css";
-import { useContext, useState } from "react";
+import { useLoaderData, Link } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../Context/Context";
 import { WishContext } from "../WishContext/WishContext";
-import React from "react";
 import { toast } from "react-toastify";
-import { Helmet} from "react-helmet-async";
+import { Helmet } from "react-helmet-async";
+import { ShoppingCart, Heart, Star, CaretLeft } from "@phosphor-icons/react";
+import { findProduct } from "../../lib/products";
+import { useRecentlyViewed } from "../../hooks/useRecentlyViewed";
+import RelatedProducts from "../Product/RelatedProducts";
+import RecentlyViewed from "../Product/RecentlyViewed";
 import "react-toastify/dist/ReactToastify.css";
 
-// import { ToastContainer, toast } from 'react-hot-toast';
-// import "react-toastify/dist/ReactToastify.css";
-
 const ProductBanner = ({ id }) => {
-  // console.log(typeof id);
-  const ID = parseInt(id);
-  // console.log(typeof ID);
-  const data = useLoaderData();
-  // console.log(data);
-  const productData = data.find((item) => parseInt(item.product_id) === ID);
-  // console.log(productData);
-  const { cartItems, addToCart } = useContext(CartContext);
-  const { wishItems, addToWish } = useContext(WishContext);
-  // console.log(cartItems);
+  const products = useLoaderData();
+  const productData = findProduct(products, id);
+  const { addToCart } = useContext(CartContext);
+  const { addToWish, wishItems } = useContext(WishContext);
+  const { recent, record } = useRecentlyViewed();
+  const [justAdded, setJustAdded] = useState(false);
 
-  const [Disabled, setDisabled] = useState(false);
-  const handleClick = () => {
-    console.log("Button clicked!");
-    setDisabled(true);
-  };
+  useEffect(() => {
+    if (productData) record(productData);
+  }, [productData, record]);
+
+  useEffect(() => {
+    if (!justAdded) return;
+    const t = setTimeout(() => setJustAdded(false), 1400);
+    return () => clearTimeout(t);
+  }, [justAdded]);
+
+  if (!productData) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-24 text-center">
+        <h1 className="text-2xl font-semibold text-content">Product not found</h1>
+        <p className="mt-2 text-muted">
+          The product you're looking for doesn't exist.
+        </p>
+        <Link to="/">
+          <button className="mt-6 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-fg transition-colors hover:bg-accent-hover">
+            Back to catalog
+          </button>
+        </Link>
+      </div>
+    );
+  }
 
   const {
     product_id,
@@ -41,129 +57,124 @@ const ProductBanner = ({ id }) => {
     rating,
   } = productData;
 
-  const notify = () =>
-    toast.success(`${product_title} has been successfully added to cart!`);
-  const notify2 = () =>
-    toast.success(`${product_title} has been successfully added to wishlist!`);
+  const inWishlist = wishItems.some(
+    (item) => String(item.product_id) === String(product_id)
+  );
+
+  const handleAddToCart = () => {
+    addToCart(productData);
+    setJustAdded(true);
+    toast.success(`${product_title} added to cart`);
+  };
+
+  const handleAddToWish = () => {
+    if (inWishlist) return;
+    addToWish(productData);
+    toast.success(`${product_title} added to wishlist`);
+  };
 
   return (
-    <div className="static">
+    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
       <Helmet>
-        <title>Product Details Page</title>
-        <meta name="description" content="Learn more about us on this page" />
+        <title>{product_title}</title>
+        <meta name="description" content={description} />
       </Helmet>
-      <div className="bg-[#9538E2] text-center h-[350px] pt-8">
-        <h3 className="font-bold text-white text-3xl w-1/2 mx-auto">
-          Product Details
-        </h3>
-        <p className="text-white w-1/3 mx-auto">
-          Explore the latest gadgets that will take your experience to the next
-          level. From smart devices to the coolest accessories, we have it all!
-        </p>
-      </div>
-      <div className="relative bottom-56">
-        <div className="bg-slate-100 w-8/12 mx-auto rounded-3xl p-6 shadow-2xl">
-          <div className="flex flex-col lg:flex-row gap-8">
-            <img
-              src={product_image}
-              alt={product_title}
-              className="max-w-sm rounded-lg shadow-2xl object-contain h-full max-h-[400px]"
-            />
-            <div className="flex flex-col justify-around">
-              <h1 className="text-5xl font-bold mb-2">{product_title}</h1>
-              <p className="text-xl font-bold  mb-2">Price: ${price}</p>
-              <button
-                className={`btn btn-xs max-w-32 ${
-                  availability ? "Active-2" : "Active-3"
-                }`}
-              >
-                {availability ? "In stock" : "Not in stock"}
-              </button>
-              <p className="py-6">{description}</p>
-              <div className="mb-3">
-                <h3 className="font-bold text-lg">Specifications:</h3>
-                {specification.map((spec, index) => (
-                  <p key={index}>
-                    <span className="font-bold">{index + 1}.</span> {spec}
-                  </p>
-                ))}
-              </div>
-              <p className="text-xl font-bold  mb-2">Rating</p>
-              <div className="flex gap-6 mb-2">
-                <div className="rating">
-                  <input
-                    type="radio"
-                    name="rating-2"
-                    className="mask mask-star-2 bg-orange-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-2"
-                    className="mask mask-star-2 bg-orange-400"
-                    defaultChecked
-                  />
-                  <input
-                    type="radio"
-                    name="rating-2"
-                    className="mask mask-star-2 bg-orange-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-2"
-                    className="mask mask-star-2 bg-orange-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-2"
-                    className="mask mask-star-2 bg-orange-400"
-                  />
-                </div>
-                <p>{rating}</p>
-              </div>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => {
-                    addToCart(productData);
-                    notify();
-                  }}
-                  className="btn bg-[#9538E2] rounded-full text-white"
-                >
-                  Add to Cart{" "}
-                  <img
-                    src="https://i.ibb.co.com/JkNgW5F/icons8-cart-50.png
-"
-                    alt=""
-                    className="w-5"
-                  />
-                </button>
 
-                <button
-                  onClick={() => {
-                    handleClick();
-                    addToWish(productData);
-                    notify2();
-                  }}
-                  disabled={Disabled}
-                  className="btn rounded-full border-1 border-black"
-                >
-                  <img
-                    src="https://i.ibb.co.com/64gRWY0/icons8-heart-50.png"
-                    alt=""
-                    className="w-5 text-[#9538E2]"
-                  />
-                </button>
-              </div>
+      <Link
+        to="/"
+        className="mb-8 inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-content"
+      >
+        <CaretLeft size={14} />
+        Back to catalog
+      </Link>
+
+      <div className="grid gap-10 lg:grid-cols-2">
+        <div className="flex h-80 items-center justify-center rounded-2xl bg-photo p-8 ring-1 ring-inset ring-black/10 lg:h-full">
+          <img
+            src={product_image}
+            alt={product_title}
+            className="h-full max-h-96 w-full object-contain"
+          />
+        </div>
+
+        <div className="flex flex-col gap-5">
+          <div>
+            <p className="mb-2 text-sm capitalize text-muted">{category}</p>
+            <h1 className="text-3xl font-semibold tracking-tight text-content">
+              {product_title}
+            </h1>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <p className="font-mono text-2xl text-content">${price}</p>
+            <span
+              className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
+                availability
+                  ? "bg-success/10 text-success"
+                  : "bg-danger/10 text-danger"
+              }`}
+            >
+              {availability ? "In stock" : "Out of stock"}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="flex gap-0.5 text-warn">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                  key={star}
+                  size={16}
+                  weight={Math.round(rating) >= star ? "fill" : "regular"}
+                />
+              ))}
             </div>
+            <span className="font-mono text-sm text-muted">{rating}</span>
+          </div>
+
+          <p className="leading-relaxed text-muted">{description}</p>
+
+          <div className="rounded-2xl border border-subtle bg-surface p-5">
+            <h2 className="mb-3 text-sm font-semibold text-content">Specifications</h2>
+            <dl className="grid gap-2">
+              {specification.map((spec, index) => (
+                <div key={index} className="flex gap-2 text-sm">
+                  <dt className="font-mono text-faint">{String(index + 1).padStart(2, "0")}</dt>
+                  <dd className="text-muted">{spec}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+
+          <div className="mt-2 flex gap-3">
+            <button
+              onClick={handleAddToCart}
+              disabled={!availability}
+              className="flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-accent-fg transition-all hover:bg-accent-hover active:scale-[0.98] disabled:opacity-40"
+            >
+              {justAdded ? "Added" : "Add to Cart"}
+              <ShoppingCart size={18} weight={justAdded ? "fill" : "regular"} />
+            </button>
+
+            <button
+              onClick={handleAddToWish}
+              disabled={inWishlist}
+              aria-label={inWishlist ? "Already in wishlist" : "Add to wishlist"}
+              className="grid h-11 w-11 place-items-center rounded-full border border-strong text-muted transition-colors hover:border-accent hover:text-accent disabled:opacity-40"
+            >
+              <Heart size={18} weight={inWishlist ? "fill" : "regular"} />
+            </button>
           </div>
         </div>
       </div>
+
+      <RelatedProducts
+        products={products}
+        category={category}
+        excludeId={product_id}
+      />
+      <RecentlyViewed items={recent} excludeId={product_id} />
     </div>
   );
 };
 
 export default ProductBanner;
-
-
-// https://i.ibb.co.com/TL16VSm/icons8-cross-48.png
-// https://i.ibb.co.com/JkNgW5F/icons8-cart-50.png
-// https://i.ibb.co.com/64gRWY0/icons8-heart-50.png

@@ -10,12 +10,12 @@ const Authors_Hub = () => {
       </Helmet>
       {/* <p className="font-bold text-2xl">Authors page</p> */}
       <AuthorsBar></AuthorsBar>
-      <div class="max-w-4xl w-10/12 mx-auto p-6 bg-white rounded-lg shadow-lg mt-28">
-        <h1 class="text-3xl font-bold text-purple-700 mb-4">
-          Project Overview: <span class="text-gray-900">Gadget Heaven</span>
+      <div className="mx-auto mt-12 max-w-4xl rounded-2xl border border-subtle bg-surface p-8">
+        <h1 className="mb-4 text-3xl font-bold text-content">
+          Project Overview: <span className="text-accent-400">Gadget Heaven</span>
         </h1>
-        <p class="text-lg leading-relaxed mb-6">
-          Welcome to <span class="font-semibold">Gadget Heaven</span>, an
+        <p className="mb-6 text-lg leading-relaxed text-muted">
+          Welcome to <span className="font-semibold text-content">Gadget Heaven</span>, an
           intuitive, dynamic e-commerce platform designed to provide users with
           an engaging and user-friendly shopping experience. Built with a modern
           tech stack and adhering to industry best practices, this site offers a
@@ -24,13 +24,13 @@ const Authors_Hub = () => {
           efficient checkout process.
         </p>
 
-        <h2 class="text-2xl font-semibold text-purple-700 mb-3">
+        <h2 className="mb-3 text-2xl font-semibold text-content">
           Learning Points of Project Creation
         </h2>
 
-        <ol class="space-y-4">
-          <li class="bg-gray-50 p-4 rounded-lg shadow">
-            <h3 class="font-semibold text-lg text-gray-800">
+        <ol className="space-y-4">
+          <li className="bg-surface-2/60 p-4 rounded-xl">
+            <h3 className="font-semibold text-lg text-content">
               1. Dynamic State Management
             </h3>
             <p>
@@ -40,8 +40,8 @@ const Authors_Hub = () => {
             </p>
           </li>
 
-          <li class="bg-gray-50 p-4 rounded-lg shadow">
-            <h3 class="font-semibold text-lg text-gray-800">
+          <li className="bg-surface-2/60 p-4 rounded-xl">
+            <h3 className="font-semibold text-lg text-content">
               2. Custom Hooks and Context API
             </h3>
             <p>
@@ -51,8 +51,8 @@ const Authors_Hub = () => {
             </p>
           </li>
 
-          <li class="bg-gray-50 p-4 rounded-lg shadow">
-            <h3 class="font-semibold text-lg text-gray-800">
+          <li className="bg-surface-2/60 p-4 rounded-xl">
+            <h3 className="font-semibold text-lg text-content">
               3. Toaster Notifications
             </h3>
             <p>
@@ -62,8 +62,8 @@ const Authors_Hub = () => {
             </p>
           </li>
 
-          <li class="bg-gray-50 p-4 rounded-lg shadow">
-            <h3 class="font-semibold text-lg text-gray-800">
+          <li className="bg-surface-2/60 p-4 rounded-xl">
+            <h3 className="font-semibold text-lg text-content">
               4. Responsive and Engaging UI/UX Design
             </h3>
             <p>
@@ -73,8 +73,8 @@ const Authors_Hub = () => {
             </p>
           </li>
 
-          <li class="bg-gray-50 p-4 rounded-lg shadow">
-            <h3 class="font-semibold text-lg text-gray-800">
+          <li className="bg-surface-2/60 p-4 rounded-xl">
+            <h3 className="font-semibold text-lg text-content">
               5. Routing and Dynamic Titles
             </h3>
             <p>
@@ -84,8 +84,8 @@ const Authors_Hub = () => {
             </p>
           </li>
 
-          <li class="bg-gray-50 p-4 rounded-lg shadow">
-            <h3 class="font-semibold text-lg text-gray-800">
+          <li className="bg-surface-2/60 p-4 rounded-xl">
+            <h3 className="font-semibold text-lg text-content">
               6. Sorting and Filtering Logic
             </h3>
             <p>
@@ -94,8 +94,8 @@ const Authors_Hub = () => {
             </p>
           </li>
 
-          <li class="bg-gray-50 p-4 rounded-lg shadow">
-            <h3 class="font-semibold text-lg text-gray-800">
+          <li className="bg-surface-2/60 p-4 rounded-xl">
+            <h3 className="font-semibold text-lg text-content">
               7. Enhanced Error Handling and User Feedback
             </h3>
             <p>
@@ -104,8 +104,8 @@ const Authors_Hub = () => {
             </p>
           </li>
 
-          <li class="bg-gray-50 p-4 rounded-lg shadow">
-            <h3 class="font-semibold text-lg text-gray-800">
+          <li className="bg-surface-2/60 p-4 rounded-xl">
+            <h3 className="font-semibold text-lg text-content">
               8. Project Organization and Component Architecture
             </h3>
             <p>
@@ -114,8 +114,8 @@ const Authors_Hub = () => {
             </p>
           </li>
 
-          <li class="bg-gray-50 p-4 rounded-lg shadow">
-            <h3 class="font-semibold text-lg text-gray-800">
+          <li className="bg-surface-2/60 p-4 rounded-xl">
+            <h3 className="font-semibold text-lg text-content">
               9. Using Third-Party Libraries for Efficiency
             </h3>
             <p>
@@ -125,8 +125,8 @@ const Authors_Hub = () => {
             </p>
           </li>
 
-          <li class="bg-gray-50 p-4 rounded-lg shadow">
-            <h3 class="font-semibold text-lg text-gray-800">
+          <li className="bg-surface-2/60 p-4 rounded-xl">
+            <h3 className="font-semibold text-lg text-content">
               10. Building a Scalable and Maintainable Codebase
             </h3>
             <p>
@@ -137,9 +137,9 @@ const Authors_Hub = () => {
           </li>
         </ol>
 
-        <div class="mt-8 p-4 bg-purple-100 rounded-lg shadow">
-          <p class="text-lg font-semibold text-purple-700">Conclusion</p>
-          <p class="text-gray-700 mt-2">
+        <div className="mt-8 rounded-xl bg-accent-500/10 p-4">
+          <p className="text-lg font-semibold text-accent-400">Conclusion</p>
+          <p className="mt-2 text-muted">
             This project highlights essential skills in state management, UI/UX
             design, and dynamic functionality for an e-commerce platform. It
             serves as a foundation for building scalable, user-centered web

@@ -1,34 +1,65 @@
 const Footer = () => {
   return (
-    <div className="bg-white m-0 p-0 w-full">
-      <div className="w-10/12 mx-auto text-center pt-24 mb-16">
-        <h2 className="text-2xl font-bold mb-3">Gadget Heaven</h2>
-        <p>Leading the way in cutting-edge technology and Innovation</p>
+    <footer className="w-full border-t border-subtle bg-canvas">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+        <div className="mb-12 text-center">
+          <h2 className="mb-2 text-xl font-semibold text-content">
+            Gadget Heaven
+          </h2>
+          <p className="text-sm text-faint">
+            Leading the way in cutting-edge technology and innovation.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+          <nav className="flex flex-col gap-2">
+            <h6 className="mb-1 text-sm font-semibold text-content">
+              Services
+            </h6>
+            <a className="text-sm text-faint hover:text-content">
+              Product Support
+            </a>
+            <a className="text-sm text-faint hover:text-content">
+              Order Tracking
+            </a>
+            <a className="text-sm text-faint hover:text-content">
+              Shipping and delivery
+            </a>
+            <a className="text-sm text-faint hover:text-content">
+              Returns
+            </a>
+          </nav>
+          <nav className="flex flex-col gap-2">
+            <h6 className="mb-1 text-sm font-semibold text-content">
+              Company
+            </h6>
+            <a className="text-sm text-faint hover:text-content">
+              About us
+            </a>
+            <a className="text-sm text-faint hover:text-content">
+              Careers
+            </a>
+            <a className="text-sm text-faint hover:text-content">
+              Contact
+            </a>
+          </nav>
+          <nav className="flex flex-col gap-2">
+            <h6 className="mb-1 text-sm font-semibold text-content">
+              Legal
+            </h6>
+            <a className="text-sm text-faint hover:text-content">
+              Terms of Service
+            </a>
+            <a className="text-sm text-faint hover:text-content">
+              Privacy policy
+            </a>
+            <a className="text-sm text-faint hover:text-content">
+              Cookie policy
+            </a>
+          </nav>
+        </div>
       </div>
-      <div className="w-10/12 mx-auto mb-28">
-        <footer className="footer flex justify-between">
-          <nav>
-            <h6 className="footer-title">Services</h6>
-            <a className="link link-hover">Product Support</a>
-            <a className="link link-hover">Order Tracking</a>
-            <a className="link link-hover">Shipping and delivery</a>
-            <a className="link link-hover">Returns</a>
-          </nav>
-          <nav>
-            <h6 className="footer-title">Company</h6>
-            <a className="link link-hover">About us</a>
-            <a className="link link-hover">Careers</a>
-            <a className="link link-hover">Contact</a>
-          </nav>
-          <nav>
-            <h6 className="footer-title">Legal</h6>
-            <a className="link link-hover">Terms of Services</a>
-            <a className="link link-hover">Privacy policy</a>
-            <a className="link link-hover">Cookie policy</a>
-          </nav>
-        </footer>
-      </div>
-    </div>
+    </footer>
   );
 };
 

@@ -1,27 +1,40 @@
-import Footer from "../Footer/Footer";
-import Header from "../Header/Header";
-import Navbar from "../Navbar/Navbar";
-import { Link} from "react-router-dom";
-import { Helmet} from "react-helmet-async";
+import { Link, useRouteError } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { WarningCircle } from "@phosphor-icons/react";
 
-const Errorpage = () => {
+// Rendered inside Root for child-route errors (so it inherits header/footer),
+// and standalone if the root route itself fails.
+// Used two ways: as an errorElement (where useRouteError supplies the error)
+// and as the catch-all "*" route, which passes notFound explicitly because no
+// router error exists in that case.
+const Errorpage = ({ notFound = false }) => {
+  const error = useRouteError();
+  const is404 = notFound || error?.status === 404;
+
   return (
-    <div>
+    <div className="mx-auto flex min-h-[60vh] max-w-2xl flex-col items-center justify-center gap-5 px-4 py-24 text-center">
       <Helmet>
-        <title>Error Page</title>
-        <meta name="description" content="Learn more about us on this page" />
+        <title>{is404 ? "Page not found" : "Something went wrong"}</title>
       </Helmet>
-      <Header></Header>
-      <div className="my-12 h-[400px] bg-slate-200 flex flex-col items-center justify-center w-11/12 mx-auto rounded-lg shadow-2xl gap-6">
-        <h2 className="text-7xl text-center">Error/404</h2>
-        <h2 className="text-7xl text-center">Page not found</h2>
-        <Link to="/">
-          <button className="bg-[#9538E2] text-white btn-ghost font-semibold px-6 py-4 rounded-btn">
-            Back to Homepage
-          </button>
-        </Link>
-      </div>
-      <Footer></Footer>
+
+      <span className="grid h-14 w-14 place-items-center rounded-full bg-danger/10 text-danger">
+        <WarningCircle size={28} />
+      </span>
+
+      <h1 className="text-4xl font-semibold tracking-tight text-content">
+        {is404 ? "404" : "Something went wrong"}
+      </h1>
+      <p className="text-muted">
+        {is404
+          ? "We couldn't find that page."
+          : error?.message || "An unexpected error occurred."}
+      </p>
+
+      <Link to="/">
+        <button className="rounded-full bg-accent px-6 py-3 text-sm font-semibold text-accent-fg transition-colors hover:bg-accent-hover">
+          Back to homepage
+        </button>
+      </Link>
     </div>
   );
 };
