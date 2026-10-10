@@ -50,10 +50,6 @@
   --c-ring: 110 168 254;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   @apply bg-canvas text-content;
 }
@@ -83,9 +79,6 @@ body * {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   *,
   *::before,
   *::after {

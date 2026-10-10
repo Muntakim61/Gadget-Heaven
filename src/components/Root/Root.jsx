@@ -6,6 +6,7 @@ import Footer from "../Footer/Footer";
 import { CartContext } from "../Context/Context";
 import { CardGridSkeleton } from "../ui/Skeleton";
 import CommandPalette from "../Search/CommandPalette";
+import ChatWidget from "../Chat/ChatWidget";
 import { pageTransition } from "../../lib/motion";
 
 const Root = () => {
@@ -15,8 +16,10 @@ const Root = () => {
   const [announcement, setAnnouncement] = useState("");
   const previousCount = useRef(null);
 
+  // Jump to the top on every route change. (index.css deliberately has no
+  // global `scroll-behavior: smooth` - it fought with this instant reset.)
   useLayoutEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    window.scrollTo(0, 0);
   }, [pathname]);
 
   // Screen readers get no signal from a toast, so mirror cart changes here.
@@ -62,6 +65,7 @@ const Root = () => {
       <Footer />
 
       <CommandPalette />
+      <ChatWidget />
 
       <p aria-live="polite" className="sr-only">
         {announcement}

@@ -1,40 +1,28 @@
-// Single source of truth for the product catalog.
-// Previously this file was fetched twice (a router loader plus a component
-// effect) with no caching, so every navigation refetched all 24 products.
+// Single source of truth for the product catalog, fetched once and cached
+// in memory so every page that needs products shares the same request.
 let inFlight = null;
 
 const FRIENDLY_ERROR = "We couldn't reach the product catalog.";
 
-const loadProducts = async () => {
-  let res;
+async function loadProducts() {
   try {
-    res = await fetch("/cardData.json");
+    const res = await fetch("/cardData.json");
+    // The SPA rewrite serves index.html (200, text/html) for any missing
+    // file, so we also check the content type before trusting a 200.
+    const isJson = (res.headers.get("content-type") || "").includes("application/json");
+    if (!res.ok || !isJson) throw new Error();
+    const data = await res.json();
+    if (!Array.isArray(data)) throw new Error();
+    return data;
   } catch {
     throw new Error(FRIENDLY_ERROR);
   }
-
-  if (!res.ok) throw new Error(FRIENDLY_ERROR);
-
-  // The SPA rewrite serves index.html with a 200 for missing files, so a
-  // successful status is not enough to know we actually got the catalog.
-  const type = res.headers.get("content-type") || "";
-  if (!type.includes("application/json")) throw new Error(FRIENDLY_ERROR);
-
-  let data;
-  try {
-    data = await res.json();
-  } catch {
-    throw new Error(FRIENDLY_ERROR);
-  }
-
-  if (!Array.isArray(data)) throw new Error(FRIENDLY_ERROR);
-  return data;
-};
+}
 
 export const getProducts = () => {
   if (!inFlight) {
+    // Don't cache a rejection, or a retry could never succeed.
     inFlight = loadProducts().catch((err) => {
-      // Don't cache a rejection, or retry could never succeed.
       inFlight = null;
       throw err;
     });

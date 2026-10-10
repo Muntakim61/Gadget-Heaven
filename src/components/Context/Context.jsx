@@ -4,12 +4,11 @@ import localforage from "localforage";
 export const CartContext = createContext();
 
 const CART_KEY = "gadget-heaven-cart-v2";
-const LEGACY_CART_KEY = "gadget-heaven-cart";
 
 const clampQty = (value) => Math.max(1, Number(value) || 1);
 
-// Collapses a list into one quantity-aware entry per product. Doubles as the
-// v1 migration (v1 stored one entry per add) and as the merge used at hydration.
+// Collapses a list into one quantity-aware entry per product id. Used both
+// to dedupe on load and to merge anything added before loading finished.
 const normalize = (list) => {
   if (!Array.isArray(list)) return [];
   const byId = new Map();
@@ -31,14 +30,7 @@ export const CartProvider = ({ children }) => {
     let cancelled = false;
     (async () => {
       try {
-        let stored = await localforage.getItem(CART_KEY);
-        if (!stored) {
-          const legacy = await localforage.getItem(LEGACY_CART_KEY);
-          if (legacy) {
-            stored = legacy;
-            await localforage.removeItem(LEGACY_CART_KEY);
-          }
-        }
+        const stored = await localforage.getItem(CART_KEY);
         if (cancelled) return;
         // Merge rather than replace: anything the user added while the store
         // was still loading would otherwise be silently discarded.
