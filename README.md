@@ -8,13 +8,12 @@ An e-commerce front end for browsing tech gadgets, built with React, Vite and Ta
 
 ## Features
 
-- Light and dark themes that follow your system setting, with a toggle that persists
-- Catalog with search, category, price and sort filters, all synced to the URL so views are shareable
-- Command palette (`Ctrl`/`Cmd` + `K`) with fuzzy search
-- Cart with quantity controls, plus a wishlist, both saved locally between visits
+- Light and dark themes that follow your system setting
+- Catalog with search, category, price and sort filters
+- Cart with quantity controls, plus a wishlist.
 - Recently viewed and related products
 - Price/rating chart on the statistics page
-- AI shopping assistant chatbot, with a gift-finder quiz (Netlify only, needs the backend function)
+- AI shopping assistant chatbot, with a gift-finder quiz(Netlify only)
 
 ![Catalog and filters](screenshots/catalog-light.jpg)
 
@@ -26,7 +25,7 @@ An e-commerce front end for browsing tech gadgets, built with React, Vite and Ta
 
 React 18 · React Router · Tailwind CSS · Motion · Recharts · Phosphor Icons · localforage · Google Gemini
 
-## Running it
+## Run it
 
 ```bash
 npm install
