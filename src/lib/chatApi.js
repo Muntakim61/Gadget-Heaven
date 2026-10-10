@@ -3,7 +3,11 @@
 export async function sendChatMessage(payload) {
   let res;
   try {
-    res = await fetch("/api/chat", {
+    // Calling the function directly rather than through the /api/chat
+    // alias in netlify.toml - that redirect proved unreliable for POST
+    // requests in production (served a stale cached 404 instead of
+    // reaching the function), while this path has worked consistently.
+    res = await fetch("/.netlify/functions/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
