@@ -2,7 +2,7 @@
 
 An e-commerce front end for browsing tech gadgets, built with React, Vite and Tailwind.
 
-**Live:** [gadget-heaven-redesign.surge.sh](https://gadget-heaven-redesign.surge.sh)
+**Live:** [gadget-heaven-frontend.netlify.app](https://gadget-heaven-frontend.netlify.app) | [gadget-heaven-frontend.surge.sh](https://gadget-heaven-frontend.surge.sh)
 
 ![Home page](screenshots/home-dark.jpg)
 
