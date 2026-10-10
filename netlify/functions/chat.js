@@ -11,7 +11,13 @@ import { buildGiftShortlist, isRealProductId } from "./_lib/catalog.js";
 // and keeps working when that happens. Both are Google's own aliases
 // for a current model, not a client-controlled value.
 const MODELS = ["gemini-flash-latest", "gemini-flash-lite-latest"];
-const MAX_OUTPUT_TOKENS = 300;
+// Generous headroom: these models can spend part of this budget on
+// hidden "thinking" before the visible reply, and a tighter number
+// occasionally cut a reply off mid-sentence. thinkingConfig would be the
+// precise fix, but it's not supported consistently across both models
+// in MODELS (gemini-flash-lite-latest rejects it outright), so a bigger
+// budget is the simpler fix that works everywhere.
+const MAX_OUTPUT_TOKENS = 1024;
 const UPSTREAM_TIMEOUT_MS = 9_000;
 
 const SYSTEM_PROMPT = `You are the shopping assistant for Gadget Heaven, a demo
