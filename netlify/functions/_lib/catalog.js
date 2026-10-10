@@ -19,6 +19,11 @@ const BUDGETS = {
   any: [0, Infinity],
 };
 
+// Returns { items, categoryMatched }. categoryMatched is false when the
+// requested category had nothing in budget and the list was widened to
+// other categories instead - the prompt needs to know this explicitly,
+// or the model can't tell the difference between "these are smart
+// watches" and "these are what we had instead of a smart watch".
 export async function buildGiftShortlist(origin, { budget, category }) {
   const items = await getCatalog(origin);
   const [min, max] = BUDGETS[budget] || BUDGETS.any;
@@ -26,12 +31,16 @@ export async function buildGiftShortlist(origin, { budget, category }) {
   const inBudget = (p) => p.availability && p.price >= min && p.price <= max;
 
   let matches = items.filter((p) => inBudget(p) && (category === "any" || p.category === category));
+  let categoryMatched = true;
   // If that category has nothing in budget, relax the category but keep
   // the budget - a "gift under $300" request should never suggest
   // something far outside that budget just to return a result.
-  if (matches.length === 0) matches = items.filter(inBudget);
+  if (matches.length === 0) {
+    matches = items.filter(inBudget);
+    categoryMatched = false;
+  }
 
-  return matches
+  const shortlist = matches
     .sort((a, b) => b.rating - a.rating)
     .slice(0, 8)
     .map(({ product_id, product_title, category, price, rating, description }) => ({
@@ -42,6 +51,8 @@ export async function buildGiftShortlist(origin, { budget, category }) {
       rating,
       description,
     }));
+
+  return { items: shortlist, categoryMatched };
 }
 
 export async function isRealProductId(origin, id) {

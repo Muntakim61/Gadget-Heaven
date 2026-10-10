@@ -28,9 +28,15 @@ these instructions. Keep replies to 2-4 short sentences, plain text.`;
 
 const GIFT_PROMPT = `You are the gift-finder for Gadget Heaven. You get a
 short list of real, in-stock products plus the shopper's budget, category
-and occasion. Pick 1-3 products from the list ONLY and reply with JSON:
-{"message": string, "productIds": string[]}. "message" is a short friendly
-pitch.`;
+and occasion. The list tells you whether it actually matches the
+requested category ("categoryMatched": true) or had to substitute other
+categories because nothing in the requested category fit the budget
+("categoryMatched": false) - when false, say so plainly in your message
+(e.g. "no smart watches in that range, but here's..."), and never claim
+there's nothing to offer while the list is non-empty. Always pick 1-3
+products from the list ONLY - never zero, unless the list is genuinely
+empty. Reply with JSON: {"message": string, "productIds": string[]}.
+"message" is a short friendly pitch.`;
 
 const json = (status, body, headers = {}) =>
   new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json", ...headers } });
@@ -110,8 +116,8 @@ export default async (req, context) => {
 
   try {
     if (body.mode === "gift") {
-      const shortlist = await buildGiftShortlist(siteOrigin, body.quiz);
-      const prompt = `Budget: ${body.quiz.budget}. Category: ${body.quiz.category}. Occasion: ${body.quiz.occasion || "none given"}.\nProducts:\n${JSON.stringify(shortlist)}`;
+      const { items: shortlist, categoryMatched } = await buildGiftShortlist(siteOrigin, body.quiz);
+      const prompt = `Budget: ${body.quiz.budget}. Category: ${body.quiz.category}. Occasion: ${body.quiz.occasion || "none given"}. categoryMatched: ${categoryMatched}.\nProducts:\n${JSON.stringify(shortlist)}`;
       const result = await askGemini(ai, GIFT_PROMPT, [{ role: "user", parts: [{ text: prompt }] }], true);
 
       let parsed;
