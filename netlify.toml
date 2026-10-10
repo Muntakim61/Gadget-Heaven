@@ -1,11 +1,15 @@
 [build]
   command = "npm run build"
   publish = "dist"
+
+[build.environment]
   # ALLOWED_ORIGINS holds this site's own public URL (used for CORS
   # allowlisting in netlify/functions/chat.js), not a secret - but its
-  # value is a plain string that can innocuously show up in build output,
-  # which trips Netlify's secrets scanner. Excluding just this one key
-  # rather than disabling scanning entirely.
+  # value is a plain string that can innocuously show up in repo files
+  # (README, .env.example) and build output, which trips Netlify's
+  # secrets scanner. Excluding just this one key rather than disabling
+  # scanning entirely. (Must live under [build.environment], not bare
+  # under [build] - that silently did nothing on the previous deploy.)
   SECRETS_SCAN_OMIT_KEYS = "ALLOWED_ORIGINS"
 
 [functions]
