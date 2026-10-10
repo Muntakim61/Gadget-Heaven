@@ -20,8 +20,6 @@ An e-commerce front end for browsing tech gadgets, built with React, Vite and Ta
 
 ![Product detail](screenshots/product-detail.jpg)
 
-![Command palette](screenshots/command-palette.jpg)
-
 ![Chatbot](screenshots/chatbot.jpg)
 
 ## Built with
