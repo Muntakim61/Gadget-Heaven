@@ -7,7 +7,7 @@ import { buildGiftShortlist, isRealProductId } from "./_lib/catalog.js";
 
 const MODEL = "gemini-flash-latest"; // Google's alias for their current Flash model
 const MAX_OUTPUT_TOKENS = 300;
-const UPSTREAM_TIMEOUT_MS = 9_000;
+const UPSTREAM_TIMEOUT_MS = 25_000; // TEMP: diagnosing real production latency
 
 const SYSTEM_PROMPT = `You are the shopping assistant for Gadget Heaven, a demo
 electronics store selling phones, laptops, smart watches, and MacBooks.
