@@ -17,10 +17,10 @@
   node_bundler = "esbuild"
 
 [functions."chat"]
-  # TEMP (diagnostic): default sync function timeout is 10s, which three
-  # consecutive production calls all hit exactly - need to learn the real
-  # latency before deciding the real fix.
-  timeout = 26
+  # Default sync function timeout is 10s. chat.js can try two models in
+  # sequence (fallback on a 503 "overloaded" error), so a worst case of
+  # two ~9s attempts needs more headroom than the default gives.
+  timeout = 20
 
 # (No /api/chat alias: that rewrite proved unreliable for POST requests
 # in production - the frontend calls /.netlify/functions/chat directly.)

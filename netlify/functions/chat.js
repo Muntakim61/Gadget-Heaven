@@ -5,9 +5,14 @@ import { GoogleGenAI } from "@google/genai";
 import { checkRateLimit } from "./_lib/rateLimit.js";
 import { buildGiftShortlist, isRealProductId } from "./_lib/catalog.js";
 
-const MODEL = "gemini-flash-latest"; // Google's alias for their current Flash model
+// Tried in order. "gemini-flash-latest" can come back 503 ("experiencing
+// high demand") or 429 (its free-tier daily quota - confirmed as low as
+// 20 requests/day - used up); the lite model has a separate quota pool
+// and keeps working when that happens. Both are Google's own aliases
+// for a current model, not a client-controlled value.
+const MODELS = ["gemini-flash-latest", "gemini-flash-lite-latest"];
 const MAX_OUTPUT_TOKENS = 300;
-const UPSTREAM_TIMEOUT_MS = 25_000; // TEMP: diagnosing real production latency
+const UPSTREAM_TIMEOUT_MS = 9_000;
 
 const SYSTEM_PROMPT = `You are the shopping assistant for Gadget Heaven, a demo
 electronics store selling phones, laptops, smart watches, and MacBooks.
@@ -35,23 +40,34 @@ function validate(body) {
 }
 
 async function askGemini(ai, systemInstruction, contents, jsonOutput) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS);
-  try {
-    return await ai.models.generateContent({
-      model: MODEL,
-      contents,
-      config: {
-        systemInstruction,
-        maxOutputTokens: MAX_OUTPUT_TOKENS,
-        temperature: 0.4,
-        abortSignal: controller.signal,
-        ...(jsonOutput && { responseMimeType: "application/json" }),
-      },
-    });
-  } finally {
-    clearTimeout(timer);
+  let lastErr;
+  for (const model of MODELS) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS);
+    try {
+      return await ai.models.generateContent({
+        model,
+        contents,
+        config: {
+          systemInstruction,
+          maxOutputTokens: MAX_OUTPUT_TOKENS,
+          temperature: 0.4,
+          abortSignal: controller.signal,
+          ...(jsonOutput && { responseMimeType: "application/json" }),
+        },
+      });
+    } catch (err) {
+      lastErr = err;
+      // Only move to the next model for "this specific model is
+      // unavailable right now" - overloaded (503) or its own quota used
+      // up (429). Anything else (bad request, auth, timeout) will fail
+      // the same way on every model, so retrying is just wasted time.
+      if (err?.status !== 503 && err?.status !== 429) throw err;
+    } finally {
+      clearTimeout(timer);
+    }
   }
+  throw lastErr;
 }
 
 export default async (req, context) => {
