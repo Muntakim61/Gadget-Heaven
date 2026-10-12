@@ -4,7 +4,9 @@ An e-commerce front end for browsing tech gadgets, built with React, Vite and Ta
 
 **Live:** [gadget-heaven-frontend.netlify.app](https://gadget-heaven-frontend.netlify.app) | [gadget-heaven-frontend.surge.sh](https://gadget-heaven-frontend.surge.sh)
 
-![Home page](screenshots/home-dark.jpg)
+<div align="center">
+  <image src="screenshots/home-dark.jpg">
+</div>
 
 ## Features
 
@@ -15,11 +17,16 @@ An e-commerce front end for browsing tech gadgets, built with React, Vite and Ta
 - Price/rating chart on the statistics page
 - AI shopping assistant chatbot, with a gift-finder quiz(Netlify only)
 
-![Catalog and filters](screenshots/catalog-light.jpg)
+<div align="center">
+  <image src="screenshots/catalog-light.jpg">
+</div>
+<div align="center">
+  <image src="screenshots/product-detail.jpg">
+</div>
 
-![Product detail](screenshots/product-detail.jpg)
-
-![Chatbot](screenshots/chatbot.jpg)
+<div align="center">
+  <image src="screenshots/chatbot.jpg">
+</div>
 
 ## Built with
 
